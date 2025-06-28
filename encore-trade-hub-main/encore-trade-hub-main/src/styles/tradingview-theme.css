@@ -1,0 +1,199 @@
+:root {
+  /* Base colors */
+  --tv-background: #ffffff;
+  --tv-background-secondary: #f8f9fd;
+  --tv-background-light: #f0f3fa;
+  --tv-foreground: #131722;
+  --tv-foreground-secondary: #787b86;
+  
+  /* Brand colors */
+  --tv-blue-500: #2962ff;
+  --tv-blue-600: #1e53e5;
+  --tv-blue-700: #1848cc;
+  --tv-gradient-primary: linear-gradient(135deg, #2962ff 0%, #1e53e5 100%);
+  --tv-gradient-secondary: linear-gradient(135deg, #f0f3fa 0%, #e0e3eb 100%);
+  --tv-green-500: #089981;
+  --tv-red-500: #f23645;
+  
+  /* Interactive elements */
+  --tv-button-primary: var(--tv-blue-500);
+  --tv-button-primary-hover: var(--tv-blue-600);
+  --tv-button-primary-active: var(--tv-blue-700);
+  
+  /* Text colors */
+  --tv-text-primary: #131722;
+  --tv-text-secondary: #4a4a4a;
+  --tv-text-success: #089981;
+  --tv-text-danger: #f23645;
+  
+  /* Border colors */
+  --tv-border-color: #e0e3eb;
+  --tv-border-color-light: #f0f3fa;
+  
+  /* Chart colors */
+  --tv-chart-grid: #363c4e;
+  --tv-chart-axis: #787b86;
+  
+  /* Shadows */
+  --tv-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --tv-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --tv-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+  
+  /* Typography */
+  --tv-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --tv-font-heading: 'Clash Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Spacing */
+  --tv-spacing-1: 0.25rem;
+  --tv-spacing-2: 0.5rem;
+  --tv-spacing-3: 0.75rem;
+  --tv-spacing-4: 1rem;
+  --tv-spacing-6: 1.5rem;
+  --tv-spacing-8: 2rem;
+  
+  /* Border radius */
+  --tv-radius-sm: 3px;
+  --tv-radius-md: 6px;
+  --tv-radius-lg: 8px;
+  
+  /* Transitions */
+  --tv-transition: all 200ms ease;
+}
+
+/* Dark theme overrides */
+.dark {
+  color-scheme: dark;
+  --background: var(--tv-background);
+  --foreground: var(--tv-foreground);
+  
+  --card: var(--tv-background-secondary);
+  --card-foreground: var(--tv-foreground);
+  
+  --popover: var(--tv-background-secondary);
+  --popover-foreground: var(--tv-foreground);
+  
+  --primary: var(--tv-blue-500);
+  --primary-foreground: var(--tv-foreground);
+  
+  --secondary: var(--tv-background-light);
+  --secondary-foreground: var(--tv-foreground);
+  
+  --muted: var(--tv-background-light);
+  --muted-foreground: var(--tv-foreground-secondary);
+  
+  --accent: var(--tv-background-light);
+  --accent-foreground: var(--tv-foreground);
+  
+  --destructive: var(--tv-red-500);
+  --destructive-foreground: var(--tv-foreground);
+  
+  --border: var(--tv-border-color);
+  --input: var(--tv-border-color);
+  --ring: var(--tv-blue-500);
+  
+  --radius: var(--tv-radius-md);
+}
+
+/* Global styles */
+body {
+  font-family: var(--tv-font-family);
+  background-color: var(--tv-background);
+  color: var(--tv-text-primary);
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: var(--tv-button-primary);
+  color: white;
+  border-radius: var(--tv-radius-md);
+  transition: var(--tv-transition);
+}
+
+.btn-primary:hover {
+  background-color: var(--tv-button-primary-hover);
+}
+
+/* Card styles */
+.card {
+  background-color: var(--tv-background-secondary);
+  border: 1px solid var(--tv-border-color);
+  border-radius: var(--tv-radius-lg);
+  box-shadow: var(--tv-shadow-md);
+}
+
+/* Input styles */
+.input {
+  background-color: var(--tv-background-light);
+  border: 1px solid var(--tv-border-color);
+  color: var(--tv-text-primary);
+  border-radius: var(--tv-radius-md);
+}
+
+.input:focus {
+  border-color: var(--tv-blue-500);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
+}
+
+/* Table styles */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th {
+  background-color: var(--tv-background-light);
+  color: var(--tv-text-secondary);
+  font-weight: 500;
+  text-align: left;
+  padding: var(--tv-spacing-3) var(--tv-spacing-4);
+}
+
+.table td {
+  padding: var(--tv-spacing-3) var(--tv-spacing-4);
+  border-bottom: 1px solid var(--tv-border-color);
+}
+
+/* Navigation styles */
+.nav-item {
+  color: var(--tv-text-secondary);
+  transition: var(--tv-transition);
+}
+
+.nav-item:hover {
+  color: var(--tv-text-primary);
+}
+
+.nav-item.active {
+  color: var(--tv-blue-500);
+}
+
+/* Chart container styles */
+.chart-container {
+  background-color: var(--tv-background);
+  border: 1px solid var(--tv-border-color);
+  border-radius: var(--tv-radius-lg);
+}
+
+/* Price up/down colors */
+.price-up {
+  color: var(--tv-text-success);
+}
+
+.price-down {
+  color: var(--tv-text-danger);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  :root {
+    --tv-spacing-4: 0.75rem;
+    --tv-spacing-6: 1rem;
+    --tv-spacing-8: 1.5rem;
+  }
+  
+  .card {
+    border-radius: var(--tv-radius-md);
+  }
+}

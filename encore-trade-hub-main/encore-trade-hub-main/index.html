@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trade Encore - SEBI Registered Research Analyst</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Professional stock market research and investment advisory services. SEBI Registered Research Analyst - Reg. No. INH000009269" />
+    <meta name="author" content="Trade Encore" />
+    <meta name="keywords" content="stock market, investment, research analyst, SEBI registered, trading, portfolio management, financial advisory" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tradeencore.com/" />
+    <meta property="og:title" content="Trade Encore - SEBI Registered Research Analyst" />
+    <meta property="og:description" content="Professional stock market research and investment advisory services. SEBI Registered Research Analyst - Reg. No. INH000009269" />
+    <meta property="og:image" content="https://tradeencore.com/assets/trade-encore-og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://tradeencore.com/" />
+    <meta property="twitter:title" content="Trade Encore - SEBI Registered Research Analyst" />
+    <meta property="twitter:description" content="Professional stock market research and investment advisory services. SEBI Registered Research Analyst - Reg. No. INH000009269" />
+    <meta property="twitter:image" content="https://tradeencore.com/assets/trade-encore-og-image.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="theme-color" content="#1a237e" />
+
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- SEBI Compliance -->
+    <meta name="sebi-registration" content="INH000009269" />
+    <meta name="regulatory-compliance" content="SEBI Registered Research Analyst" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Google Apps Script Integration -->
+    <script>
+      // Global functions for Google Apps Script integration
+      window.TradeEncore = {
+        // Function to validate login with Google Apps Script
+        validateLogin: function(username, password) {
+          return new Promise((resolve, reject) => {
+            try {
+              // This would be replaced with actual google.script.run call
+              // google.script.run
+              //   .withSuccessHandler(resolve)
+              //   .withFailureHandler(reject)
+              //   .validateLogin(username, password);
+              
+              // Demo implementation
+              setTimeout(() => {
+                if (username === 'demo' && password === 'demo123') {
+                  resolve({
+                    success: true,
+                    clientName: 'Demo Client',
+                    message: 'Login successful'
+                  });
+                } else {
+                  resolve({
+                    success: false,
+                    clientName: '',
+                    message: 'Invalid username or password'
+                  });
+                }
+              }, 1000);
+            } catch (error) {
+              reject(error);
+            }
+          });
+        },
+
+        // Function to download reports
+        downloadReport: function(type) {
+          return new Promise((resolve, reject) => {
+            try {
+              // This would be replaced with actual google.script.run call
+              // google.script.run
+              //   .withSuccessHandler(resolve)
+              //   .withFailureHandler(reject)
+              //   .downloadReport(type);
+              
+              // Demo implementation
+              setTimeout(() => {
+                resolve({
+                  filename: `Trade_Encore_${type}_Report_${new Date().toISOString().split('T')[0]}.pdf`,
+                  content: 'base64_encoded_pdf_content_here',
+                  mimeType: 'application/pdf'
+                });
+              }, 2000);
+            } catch (error) {
+              reject(error);
+            }
+          });
+        },
+
+        // Function to get logo
+        getLogoImage: function() {
+          return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==';
+        },
+
+        // Function to verify Razorpay payment
+        verifyPayment: function(paymentId, subscriptionId) {
+          return new Promise((resolve, reject) => {
+            try {
+              // This would be replaced with actual google.script.run call
+              // google.script.run
+              //   .withSuccessHandler(resolve)
+              //   .withFailureHandler(reject)
+              //   .verifyPayment(paymentId, subscriptionId);
+              
+              // Demo implementation
+              setTimeout(() => {
+                resolve({
+                  success: true,
+                  message: 'Payment verified successfully'
+                });
+              }, 1000);
+            } catch (error) {
+              reject(error);
+            }
+          });
+        }
+      };
+    </script>
+  </body>
+</html>

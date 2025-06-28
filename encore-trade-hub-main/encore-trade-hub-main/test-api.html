@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Encore - API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trade Encore - API Test</h1>
+    <div class="container">
+        <div class="test-section">
+            <h2>Test Registration</h2>
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" placeholder="Enter name">
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" placeholder="Enter email">
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter password">
+                
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" placeholder="Enter phone number">
+                
+                <button onclick="testRegistration()">Test Registration</button>
+            </div>
+            <h3>Response:</h3>
+            <pre id="registration-response"></pre>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Login</h2>
+            <div>
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" placeholder="Enter email">
+                
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" placeholder="Enter password">
+                
+                <button onclick="testLogin()">Test Login</button>
+            </div>
+            <h3>Response:</h3>
+            <pre id="login-response"></pre>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Send OTP</h2>
+            <div>
+                <label for="otp-email">Email:</label>
+                <input type="email" id="otp-email" placeholder="Enter email">
+                
+                <button onclick="testSendOTP()">Send OTP</button>
+            </div>
+            <h3>Response:</h3>
+            <pre id="otp-response"></pre>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Verify OTP</h2>
+            <div>
+                <label for="verify-email">Email:</label>
+                <input type="email" id="verify-email" placeholder="Enter email">
+                
+                <label for="otp">OTP:</label>
+                <input type="text" id="otp" placeholder="Enter OTP">
+                
+                <button onclick="testVerifyOTP()">Verify OTP</button>
+            </div>
+            <h3>Response:</h3>
+            <pre id="verify-response"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Replace with your Google Apps Script Web App URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUxYkiqJ3lz7cOIUMdRIOm99glrgBXENre8-KF2x-p6sf2UF6Tic3AhPDv-FCZOWBL/exec';
+
+        // Helper function to make API calls
+        async function callApi(action, data = {}) {
+            const url = new URL(SCRIPT_URL);
+            
+            // For GET requests, add params to URL
+            if (action === 'test') {
+                url.searchParams.append('action', action);
+                Object.keys(data).forEach(key => {
+                    url.searchParams.append(key, data[key]);
+                });
+                
+                try {
+                    const response = await fetch(url.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                        mode: 'cors',
+                        credentials: 'omit'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('API Error:', error);
+                    return { 
+                        success: false, 
+                        message: 'API call failed: ' + (error.message || 'Unknown error') 
+                    };
+                }
+            }
+            
+            // For POST requests
+            try {
+                const response = await fetch(url.toString(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    mode: 'cors',
+                    credentials: 'omit',
+                    body: JSON.stringify({
+                        action,
+                        ...data
+                    }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                return { 
+                    success: false, 
+                    message: 'API call failed: ' + (error.message || 'Unknown error') 
+                };
+            }
+        }
+
+        // Test Registration
+        async function testRegistration() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const phone = document.getElementById('phone').value;
+
+            const response = await callApi('register', {
+                name,
+                email,
+                password,
+                phone
+            });
+
+            document.getElementById('registration-response').textContent = JSON.stringify(response, null, 2);
+        }
+
+        // Test Login
+        async function testLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            const response = await callApi('login', {
+                email,
+                password
+            });
+
+            document.getElementById('login-response').textContent = JSON.stringify(response, null, 2);
+        }
+
+        // Test Send OTP
+        async function testSendOTP() {
+            const email = document.getElementById('otp-email').value;
+            const response = await callApi('sendOTP', { email });
+            document.getElementById('otp-response').textContent = JSON.stringify(response, null, 2);
+        }
+
+        // Test Verify OTP
+        async function testVerifyOTP() {
+            const email = document.getElementById('verify-email').value;
+            const otp = document.getElementById('otp').value;
+            
+            const response = await callApi('verifyOTP', {
+                email,
+                otp
+            });
+            
+            document.getElementById('verify-response').textContent = JSON.stringify(response, null, 2);
+        }
+    </script>
+</body>
+</html>

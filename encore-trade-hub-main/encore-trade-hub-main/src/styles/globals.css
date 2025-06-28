@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* TradingView Light Mode Colors */
+    --tv-background: #ffffff;
+    --tv-background-secondary: #f8f9fd;
+    --tv-background-light: #f0f3fa;
+    --tv-text-primary: #131722;
+    --tv-text-secondary: #787b86;
+    --tv-blue-500: #2962ff;
+    --tv-blue-600: #1e53e5;
+    --tv-green-500: #089981;
+    --tv-red-500: #f23645;
+    --tv-border-color: #e0e3eb;
+    --tv-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --tv-radius-md: 6px;
+    --tv-radius-lg: 8px;
+
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+ 
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* TradingView-inspired styles */
+.tv-chart-container {
+  background-color: var(--tv-background);
+  border: 1px solid var(--tv-border-color);
+  border-radius: var(--tv-radius-lg);
+}
+
+.tv-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tv-table th {
+  background-color: var(--tv-background-light);
+  color: var(--tv-text-secondary);
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 16px;
+}
+
+.tv-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--tv-border-color);
+}
+
+.tv-card {
+  background-color: var(--tv-background-secondary);
+  border: 1px solid var(--tv-border-color);
+  border-radius: var(--tv-radius-lg);
+  box-shadow: var(--tv-shadow-md);
+}
+
+.tv-input {
+  background-color: var(--tv-background-light);
+  border: 1px solid var(--tv-border-color);
+  color: var(--tv-text-primary);
+  border-radius: var(--tv-radius-md);
+  padding: 8px 12px;
+}
+
+.tv-input:focus {
+  border-color: var(--tv-blue-500);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
+}
+
+.tv-button {
+  background-color: var(--tv-blue-500);
+  color: white;
+  border-radius: var(--tv-radius-md);
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 200ms ease;
+}
+
+.tv-button:hover {
+  background-color: var(--tv-blue-600);
+}
+
+.tv-button-secondary {
+  background-color: var(--tv-background-light);
+  color: var(--tv-text-primary);
+  border: 1px solid var(--tv-border-color);
+}
+
+.tv-button-secondary:hover {
+  background-color: var(--tv-background-secondary);
+}
+
+/* Price movement colors */
+.tv-price-up {
+  color: var(--tv-green-500);
+}
+
+.tv-price-down {
+  color: var(--tv-red-500);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .tv-table th,
+  .tv-table td {
+    padding: 8px 12px;
+  }
+  
+  .tv-card {
+    border-radius: var(--tv-radius-md);
+  }
+}

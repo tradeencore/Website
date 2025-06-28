@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trade Encore API</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      h1 {
+        color: #2962ff;
+        margin-top: 0;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .card h2 {
+        margin-top: 0;
+        color: #333;
+      }
+      button {
+        background-color: #2962ff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      button:hover {
+        background-color: #0039cb;
+      }
+      input, select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .result {
+        background-color: #f0f0f0;
+        padding: 15px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        margin-top: 20px;
+      }
+      .success {
+        color: #28a745;
+      }
+      .error {
+        color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Trade Encore API</h1>
+      
+      <div class="card">
+        <h2>API Status</h2>
+        <p>The Trade Encore API is running and ready to accept requests.</p>
+        <p>This web app handles user data storage in Google Sheets and sends notifications.</p>
+      </div>
+      
+      <div class="card">
+        <h2>Test User Registration</h2>
+        <form id="testForm">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="mobile">Mobile Number</label>
+            <input type="tel" id="mobile" name="mobile" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="planType">Plan Type</label>
+            <select id="planType" name="planType" required>
+              <option value="Free">Free</option>
+              <option value="Fin Silver">Fin Silver</option>
+              <option value="Fin Gold">Fin Gold</option>
+              <option value="Fin Platinum">Fin Platinum</option>
+              <option value="TFin Silver">TFin Silver</option>
+              <option value="TFin Gold">TFin Gold</option>
+              <option value="TFin Platinum">TFin Platinum</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="subscriptionType">Subscription Type</label>
+            <select id="subscriptionType" name="subscriptionType" required>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="paymentId">Payment ID (for testing)</label>
+            <input type="text" id="paymentId" name="paymentId" value="test_payment_<?= new Date().getTime() ?>">
+          </div>
+          
+          <button type="button" onclick="testAddUser()">Test Add User</button>
+        </form>
+        
+        <div id="result" class="result" style="display: none;"></div>
+      </div>
+      
+      <div class="card">
+        <h2>Test User Verification</h2>
+        <form id="verifyForm">
+          <div class="form-group">
+            <label for="verifyEmail">Email</label>
+            <input type="email" id="verifyEmail" name="email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="verifyPassword">Password</label>
+            <input type="password" id="verifyPassword" name="password" required>
+          </div>
+          
+          <button type="button" onclick="testVerifyUser()">Test Verify User</button>
+        </form>
+        
+        <div id="verifyResult" class="result" style="display: none;"></div>
+      </div>
+    </div>
+    
+    <script>
+      // Test adding a user
+      function testAddUser() {
+        const form = document.getElementById('testForm');
+        const resultDiv = document.getElementById('result');
+        
+        // Get form values
+        const formData = {
+          action: 'appendRow',
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value,
+          mobile: document.getElementById('mobile').value,
+          planType: document.getElementById('planType').value,
+          subscriptionType: document.getElementById('subscriptionType').value,
+          paymentId: document.getElementById('paymentId').value
+        };
+        
+        // Show loading state
+        resultDiv.innerHTML = 'Processing...';
+        resultDiv.style.display = 'block';
+        
+        // Call the server-side function
+        google.script.run
+          .withSuccessHandler(function(response) {
+            resultDiv.innerHTML = JSON.stringify(response, null, 2);
+            resultDiv.classList.add('success');
+            resultDiv.classList.remove('error');
+          })
+          .withFailureHandler(function(error) {
+            resultDiv.innerHTML = 'Error: ' + error.message;
+            resultDiv.classList.add('error');
+            resultDiv.classList.remove('success');
+          })
+          .appendUserData(formData);
+      }
+      
+      // Test verifying a user
+      function testVerifyUser() {
+        const verifyResultDiv = document.getElementById('verifyResult');
+        
+        // Get form values
+        const email = document.getElementById('verifyEmail').value;
+        const password = document.getElementById('verifyPassword').value;
+        
+        // Show loading state
+        verifyResultDiv.innerHTML = 'Verifying...';
+        verifyResultDiv.style.display = 'block';
+        
+        // Call the server-side function
+        google.script.run
+          .withSuccessHandler(function(response) {
+            verifyResultDiv.innerHTML = JSON.stringify(response, null, 2);
+            verifyResultDiv.classList.add(response.success ? 'success' : 'error');
+            verifyResultDiv.classList.remove(response.success ? 'error' : 'success');
+          })
+          .withFailureHandler(function(error) {
+            verifyResultDiv.innerHTML = 'Error: ' + error.message;
+            verifyResultDiv.classList.add('error');
+            verifyResultDiv.classList.remove('success');
+          })
+          .verifyUserCredentials(email, password);
+      }
+    </script>
+  </body>
+</html>

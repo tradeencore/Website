@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trade Encore Email Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #2c3e50;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .result {
+      background-color: #f8f9fa;
+      border-left: 4px solid #3498db;
+      padding: 10px 15px;
+      margin-top: 20px;
+    }
+    .error {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .success {
+      color: #27ae60;
+      font-weight: bold;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,0,0,0.3);
+      border-radius: 50%;
+      border-top-color: #3498db;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <h1>Trade Encore Email Testing Tool</h1>
+  
+  <div class="card">
+    <h2>1. Test Email Service</h2>
+    <p>This will send a test email to verify if the email service is working correctly.</p>
+    
+    <div>
+      <label for="testEmail">Email address to test:</label>
+      <input type="email" id="testEmail" placeholder="Enter your email address">
+    </div>
+    
+    <button id="testEmailBtn">Send Test Email</button>
+    <span id="testEmailLoading" class="loading" style="display: none;"></span>
+    <div id="testEmailResult" class="result" style="display: none;"></div>
+  </div>
+  
+  <div class="card">
+    <h2>2. Send OTP Email</h2>
+    <p>This will send an actual OTP email using the production flow.</p>
+    
+    <div>
+      <label for="otpEmail">Email address:</label>
+      <input type="email" id="otpEmail" placeholder="Enter your email address">
+    </div>
+    
+    <button id="sendOtpBtn">Send OTP Email</button>
+    <span id="sendOtpLoading" class="loading" style="display: none;"></span>
+    <div id="sendOtpResult" class="result" style="display: none;"></div>
+  </div>
+  
+  <div class="card">
+    <h2>3. Verify OTP</h2>
+    <p>Test the OTP verification process.</p>
+    
+    <div>
+      <label for="verifyEmail">Email address:</label>
+      <input type="email" id="verifyEmail" placeholder="Enter your email address">
+    </div>
+    
+    <div>
+      <label for="otpCode">OTP Code:</label>
+      <input type="text" id="otpCode" placeholder="Enter the OTP code you received">
+    </div>
+    
+    <button id="verifyOtpBtn">Verify OTP</button>
+    <span id="verifyOtpLoading" class="loading" style="display: none;"></span>
+    <div id="verifyOtpResult" class="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    // Get the Google Apps Script URL from .env
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUxYkiqJ3lz7cOIUMdRIOm99glrgBXENre8-KF2x-p6sf2UF6Tic3AhPDv-FCZOWBL/exec';
+    
+    // Test Email Service
+    document.getElementById('testEmailBtn').addEventListener('click', async () => {
+      const testEmail = document.getElementById('testEmail').value.trim();
+      const resultDiv = document.getElementById('testEmailResult');
+      const loadingSpinner = document.getElementById('testEmailLoading');
+      
+      if (!testEmail || !testEmail.includes('@')) {
+        resultDiv.innerHTML = '<span class="error">Please enter a valid email address</span>';
+        resultDiv.style.display = 'block';
+        return;
+      }
+      
+      try {
+        loadingSpinner.style.display = 'inline-block';
+        resultDiv.style.display = 'none';
+        
+        // Create URL with parameters
+        const url = `${GOOGLE_APPS_SCRIPT_URL}?test=email&email=${encodeURIComponent(testEmail)}`;
+        
+        // Create hidden iframe to handle the request
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        // Set up a timeout
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Request timed out')), 15000);
+        });
+        
+        // Set up the iframe load promise
+        const iframePromise = new Promise((resolve) => {
+          iframe.onload = () => {
+            resolve({
+              success: true,
+              message: `Test email sent to ${testEmail}. Please check your inbox and spam folders.`
+            });
+          };
+          
+          iframe.onerror = () => {
+            resolve({
+              success: false,
+              message: 'Failed to send test email due to network error'
+            });
+          };
+        });
+        
+        // Load the URL in the iframe
+        iframe.src = url;
+        
+        // Wait for either the iframe to load or timeout
+        const result = await Promise.race([iframePromise, timeoutPromise]);
+        
+        // Display result
+        resultDiv.innerHTML = result.success 
+          ? `<span class="success">${result.message}</span>` 
+          : `<span class="error">${result.message}</span>`;
+        
+        // Clean up
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+      } catch (error) {
+        resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+      } finally {
+        loadingSpinner.style.display = 'none';
+        resultDiv.style.display = 'block';
+      }
+    });
+    
+    // Send OTP Email
+    document.getElementById('sendOtpBtn').addEventListener('click', async () => {
+      const email = document.getElementById('otpEmail').value.trim();
+      const resultDiv = document.getElementById('sendOtpResult');
+      const loadingSpinner = document.getElementById('sendOtpLoading');
+      
+      if (!email || !email.includes('@')) {
+        resultDiv.innerHTML = '<span class="error">Please enter a valid email address</span>';
+        resultDiv.style.display = 'block';
+        return;
+      }
+      
+      try {
+        loadingSpinner.style.display = 'inline-block';
+        resultDiv.style.display = 'none';
+        
+        // Create URL with parameters
+        const url = `${GOOGLE_APPS_SCRIPT_URL}?action=sendEmailOTP&email=${encodeURIComponent(email)}`;
+        
+        // Create hidden iframe to handle the request
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        // Set up a timeout
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Request timed out')), 15000);
+        });
+        
+        // Set up the iframe load promise
+        const iframePromise = new Promise((resolve) => {
+          iframe.onload = () => {
+            resolve({
+              success: true,
+              message: `OTP email sent to ${email}. Please check your inbox and spam folders.`
+            });
+          };
+          
+          iframe.onerror = () => {
+            resolve({
+              success: false,
+              message: 'Failed to send OTP email due to network error'
+            });
+          };
+        });
+        
+        // Load the URL in the iframe
+        iframe.src = url;
+        
+        // Wait for either the iframe to load or timeout
+        const result = await Promise.race([iframePromise, timeoutPromise]);
+        
+        // Display result
+        resultDiv.innerHTML = result.success 
+          ? `<span class="success">${result.message}</span>` 
+          : `<span class="error">${result.message}</span>`;
+        
+        // Clean up
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+      } catch (error) {
+        resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+      } finally {
+        loadingSpinner.style.display = 'none';
+        resultDiv.style.display = 'block';
+      }
+    });
+    
+    // Verify OTP
+    document.getElementById('verifyOtpBtn').addEventListener('click', async () => {
+      const email = document.getElementById('verifyEmail').value.trim();
+      const otp = document.getElementById('otpCode').value.trim();
+      const resultDiv = document.getElementById('verifyOtpResult');
+      const loadingSpinner = document.getElementById('verifyOtpLoading');
+      
+      if (!email || !email.includes('@')) {
+        resultDiv.innerHTML = '<span class="error">Please enter a valid email address</span>';
+        resultDiv.style.display = 'block';
+        return;
+      }
+      
+      if (!otp) {
+        resultDiv.innerHTML = '<span class="error">Please enter the OTP code</span>';
+        resultDiv.style.display = 'block';
+        return;
+      }
+      
+      try {
+        loadingSpinner.style.display = 'inline-block';
+        resultDiv.style.display = 'none';
+        
+        // Use XMLHttpRequest for verification as we need the response
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `${GOOGLE_APPS_SCRIPT_URL}?action=verifyOTP&email=${encodeURIComponent(email)}&emailOTP=${encodeURIComponent(otp)}`, true);
+        
+        xhr.onload = function() {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const response = JSON.parse(xhr.responseText);
+              resultDiv.innerHTML = response.success 
+                ? `<span class="success">${response.message || 'OTP verified successfully!'}</span>` 
+                : `<span class="error">${response.message || 'Invalid or expired OTP'}</span>`;
+            } catch (e) {
+              resultDiv.innerHTML = `<span class="error">Error parsing response: ${e.message}</span>`;
+            }
+          } else {
+            resultDiv.innerHTML = `<span class="error">Server error: ${xhr.status}</span>`;
+          }
+          loadingSpinner.style.display = 'none';
+          resultDiv.style.display = 'block';
+        };
+        
+        xhr.onerror = function() {
+          resultDiv.innerHTML = '<span class="error">Network error occurred</span>';
+          loadingSpinner.style.display = 'none';
+          resultDiv.style.display = 'block';
+        };
+        
+        xhr.timeout = 15000; // 15 seconds
+        xhr.ontimeout = function() {
+          resultDiv.innerHTML = '<span class="error">Request timed out</span>';
+          loadingSpinner.style.display = 'none';
+          resultDiv.style.display = 'block';
+        };
+        
+        xhr.send();
+      } catch (error) {
+        resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+        loadingSpinner.style.display = 'none';
+        resultDiv.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

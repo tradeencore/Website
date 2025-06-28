@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Preload logo -->
+  <link rel="preload" as="image" href="data:image/gif;base64,<?!= getLogoImage() ?>" type="image/gif">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trade Encore - Client Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    /* Mobile-first responsive design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      .h-24 {
+        height: 4rem;
+      }
+      #welcomeMessage {
+        font-size: 0.875rem;
+      }
+      .card {
+        margin-bottom: 1rem;
+      }
+    }
+    .login-container, .dashboard {
+      transition: all 0.5s ease;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+    .btn {
+      transition: all 0.3s ease;
+    }
+    /* Smooth transitions */
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+    
+    /* Touch-friendly buttons */
+    @media (hover: none) {
+      button {
+        min-height: 44px;
+      }
+    }
+    
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .report-item {
+      transition: background 0.3s ease;
+    }
+    .report-item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</head>
+<body>
+  <div id="loginContainer" class="login-container flex items-center justify-center min-h-screen">
+    <div class="bg-white rounded-lg shadow-lg p-8 w-96">
+      <div class="flex flex-col items-center mb-6">
+        <img id="loginLogo" src="data:image/gif;base64,<?!= getLogoImage() ?>" alt="Trade Encore Logo" class="h-24 mb-2">
+        <p class="text-gray-600 text-center mb-4">Trade Encore - Your Financial Doctor</p>
+        <h1 class="text-2xl font-semibold text-center">Access our premium recommendations</h1>
+      </div>
+      <div class="space-y-4">
+        <input id="username" type="text" placeholder="Username" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input id="password" type="password" placeholder="Password" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Login</button>
+        <p id="errorMessage" class="text-red-500 text-center mt-2 hidden"></p>
+        <p class="text-gray-500 text-xs text-center mt-6">SEBI Registered Research Analyst - registration number INH000009269</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboard" class="dashboard hidden">
+    <div class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md p-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <img id="dashboardLogo" src="data:image/gif;base64,<?!= getLogoImage() ?>" alt="Trade Encore Logo" class="h-16 mr-4">
+        <h1 class="text-2xl font-semibold text-gray-800 hidden md:block">Trade Encore - Client Dashboard</h1>
+      </div>
+      <div class="flex items-center">
+        <span id="welcomeMessage" class="mr-4 text-gray-700"></span>
+        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">Logout</button>
+      </div>
+    </div>
+    <!-- Spacer for fixed header -->
+    <div class="h-24"></div>
+    <div class="container mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <div class="card p-6 fade-in">
+        <h2 class="text-xl font-semibold mb-4">Daily Market Outlook</h2>
+        <p class="text-gray-600">The daily market outlook provides a snapshot of the current state of the financial markets, including trends, key indicators, and potential market-moving events. It offers investors valuable insights into market sentiment, helping them make informed decisions about their investments.</p>
+      </div>
+      <div class="card p-6 fade-in">
+        <h2 class="text-xl font-semibold mb-4">Long Term Recommendations</h2>
+        <p class="text-gray-600">Long-term recommendations offer strategic investment advice for horizons exceeding three years. These insights focus on identifying assets with significant growth potential over the long haul, aiming to maximize returns while managing risk effectively.</p>
+        <button onclick="showReports('Long Term')" class="btn mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">View Reports</button>
+      </div>
+      <div class="card p-6 fade-in">
+        <h2 class="text-xl font-semibold mb-4">Positional Recommendations</h2>
+        <p class="text-gray-600">Positional recommendations are tailored for short-term trading strategies, typically spanning a few weeks to months. They help traders capitalize on market movements by identifying optimal entry and exit points.</p>
+        <button onclick="showReports('Positional')" class="btn mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">View Reports</button>
+      </div>
+      <div class="card p-6 fade-in">
+        <h2 class="text-xl font-semibold mb-4">Derivative Recommendations</h2>
+        <p class="text-gray-600">Derivative recommendations offer strategic guidance for trading derivative instruments like options and futures, helping investors hedge risks or speculate on market movements effectively.</p>
+        <button onclick="showReports('Derivative')" class="btn mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">View Reports</button>
+      </div>
+      <!-- Mutual Funds Section -->
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h2 class="text-xl font-semibold mb-4">Mutual Fund Recommendations</h2>
+        <p class="text-gray-600 mb-4">Expert recommendations for mutual fund investments, including SIP strategies, fund analysis, and portfolio diversification guidance for long-term wealth creation.</p>
+        <button onclick="downloadReport('mutual-funds')" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors w-full md:w-auto">View Reports</button>
+      </div>
+
+      <!-- Profile Section -->
+      <div class="col-span-1 md:col-span-2 lg:grid-cols-3 bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h2 class="text-xl font-semibold mb-4">My Profile</h2>
+        <p class="text-gray-600 mb-4">View and manage your profile details, including account information and preferences.</p>
+        <button onclick="viewProfile()" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors w-full md:w-auto">Visit My Profile</button>
+      </div>
+    </div>
+
+    <div id="reportsSection" class="hidden container mx-auto p-6">
+      <h2 id="reportsTitle" class="text-2xl font-semibold mb-6"></h2>
+      <div id="reportsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <button onclick="backToDashboard()" class="btn mt-6 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">Back to Dashboard</button>
+    </div>
+
+    <div class="container mx-auto p-6">
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Disclaimer</h2>
+        <p class="text-gray-600">
+          Trade Encore is a SEBI Registered Research Analyst with registration number INH000009269. To check SEBI registration details & certification, click on the link: <a href="https://tradeencore.com/certifications/" class="text-blue-500 hover:underline">https://tradeencore.com/certifications/</a><br><br>
+          Trade Encore does NOT provide Demat handling services or Portfolio Management services of any kind. Any guidance/recommendation provided by us is to be executed at their own risk by clients only.<br><br>
+          Registration granted by SEBI, membership of a SEBI recognized supervisory body (if any) and certification from NISM in no way guarantee performance of the intermediary or provide any assurance of returns to investors.<br><br>
+          Investment/Trading in the securities market is subject to market risk, past performance is not a guarantee of future performance. The risk of loss in trading and investment in Securities markets including Equities, Derivatives, commodities, and Currency can be substantial. These are leveraged products that carry a substantial risk of loss up to your invested capital and may not be suitable for everyone. You should therefore carefully consider whether such trading is suitable for you in light of your financial condition. Please ensure that you understand fully the risks involved and do invest money according to your risk-bearing capacity. Trade Encore does not guarantee any returns in any of its products or services. Investment in markets is subject to market risk. Hence, Trade Encore is not liable for any losses in any case.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize logo source
+    const logoSrc = 'data:image/gif;base64,<?!= getLogoImage() ?>';
+    
+    // Function to set logo source
+    function setLogoSrc(imgElement) {
+      if (imgElement) {
+        imgElement.src = logoSrc;
+        console.log('Logo set for:', imgElement.id);
+      }
+    }
+    
+    // Set logo sources when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      setLogoSrc(document.getElementById('loginLogo'));
+      setLogoSrc(document.getElementById('dashboardLogo'));
+    });
+
+    // Handle enter key in password field
+    document.getElementById('password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleLogin();
+      }
+    });
+
+    function handleLogin() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMessage = document.getElementById('errorMessage');
+      
+      console.log('Login attempt with username:', username);
+      
+      // Basic client-side validation
+      if (!username || !password) {
+        errorMessage.textContent = 'Please enter both username and password';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+
+      // Show loading state
+      const loginButton = document.querySelector('button[onclick="handleLogin()"]');
+      loginButton.textContent = 'Logging in...';
+      loginButton.disabled = true;
+      errorMessage.classList.add('hidden');
+
+      // Call Google Apps Script function
+      console.log('Sending login request to server...');
+      google.script.run
+        .withSuccessHandler(function(result) {
+          console.log('Server response:', result);
+          loginButton.textContent = 'Login';
+          loginButton.disabled = false;
+          
+          if (result.success) {
+            // Hide login, show dashboard
+            document.getElementById('loginContainer').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('clientName').textContent = `Welcome, ${result.clientName}`;
+            
+            // Store client name in session storage
+            sessionStorage.setItem('clientName', result.clientName);
+          } else {
+            errorMessage.textContent = result.message || 'Invalid username or password';
+            errorMessage.classList.remove('hidden');
+          }
+        })
+        .withFailureHandler(function(error) {
+          loginButton.textContent = 'Login';
+          loginButton.disabled = false;
+          errorMessage.textContent = 'An error occurred. Please try again.';
+          errorMessage.classList.remove('hidden');
+          console.error('Login error:', error);
+        })
+        .validateLogin(username, password);
+    }
+
+    function downloadReport(type) {
+      const downloadButton = event.target;
+      downloadButton.disabled = true;
+      downloadButton.textContent = 'Generating PDF...';
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          try {
+            console.log('Received PDF response:', response);
+            
+            // Convert base64 string to byte array
+            const byteCharacters = atob(response.content);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            
+            // Create Blob and download
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = response.filename;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Cleanup
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            // Reset button
+            downloadButton.disabled = false;
+            downloadButton.textContent = 'Download PDF';
+          } catch (error) {
+            console.error('Error processing PDF:', error);
+            downloadButton.disabled = false;
+            downloadButton.textContent = 'Download PDF';
+            alert('Error processing PDF. Please try again.');
+          }
+        })
+        .withFailureHandler(function(error) {
+          console.error('Error downloading report:', error);
+          downloadButton.disabled = false;
+          downloadButton.textContent = 'Download PDF';
+          alert('Error generating PDF. Please try again.');
+        })
+        .downloadReport(type);
+    }
+
+    function logout() {
+      document.getElementById('loginContainer').classList.remove('hidden');
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('errorMessage').classList.add('hidden');
+    }
+
+    function showReports(type) {
+      document.querySelector('.container').classList.add('hidden');
+      const reportsSection = document.getElementById('reportsSection');
+      reportsSection.classList.remove('hidden');
+      document.getElementById('reportsTitle').textContent = `${type} Research Reports`;
+
+      google.script.run.withSuccessHandler(function(reports) {
+        const reportsList = document.getElementById('reportsList');
+        reportsList.innerHTML = '';
+        reports.forEach(report => {
+          const reportItem = document.createElement('div');
+          reportItem.className = 'report-item p-4 border rounded-lg';
+          reportItem.innerHTML = `
+            <h3 class="text-lg font-semibold">${report.title}</h3>
+            <p class="text-gray-600">Date: ${report.date}</p>
+            <button onclick="downloadReport('${report.reportType}')" class="btn mt-2 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Download PDF</button>
+          `;
+          reportsList.appendChild(reportItem);
+        });
+      }).getResearchReports(type);
+    }
+
+    function backToDashboard() {
+      document.getElementById('reportsSection').classList.add('hidden');
+      document.querySelector('.container').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
